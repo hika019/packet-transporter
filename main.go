@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"github.com/google/gopacket/pcap"
 )
 
 var (
@@ -25,26 +22,6 @@ type StaticArpTable struct {
 func main() {
 	subCmd()
 
-	fmt.Println("----------Listen Packet----------")
-
-	handle, err := pcap.OpenLive("ens18", 65536, true, pcap.BlockForever)
-	if err != nil {
-		log.Fatal("ERROR opening pcap:", err)
-	}
-
-	// if err := handle.SetBPFFilter("tcp and port 54321"); err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	defer handle.Close()
-
-	src := gopacket.NewPacketSource(handle, handle.LinkType())
-
-	for packet := range src.Packets() {
-		fmt.Println(packet)
-		packet.Layer(layers.LayerTypeIPv4)
-	}
-
 }
 
 func subCmd() {
@@ -57,5 +34,9 @@ func subCmd() {
 	if args[1] == "list" {
 		devList()
 	}
+	if args[1] == "cat" {
+		catch()
+	}
+
 	os.Exit(0)
 }
